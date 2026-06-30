@@ -1,0 +1,2 @@
+"""AgriGuard application package."""
+
