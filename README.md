@@ -1,8 +1,24 @@
 # AgriGuard
 
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.10-blue)
+![FastAPI](https://img.shields.io/badge/framework-FastAPI-teal)
+
 AgriGuard is a production-oriented Crop Health and Precision Agriculture System designed to help growers, agronomists, and operations teams detect plant stress early, monitor crop conditions, and support data-driven field decisions.
 
 The repository is scaffolded for a FastAPI backend, AI model assets, reproducible data workflows, experiments, and containerized deployment. It is intentionally structured to scale from a prototype into a maintainable engineering system.
+
+## Why this project?
+
+Precision agriculture depends on timely, reliable decisions in environments where crop stress, disease, and environmental variation can change rapidly. AgriGuard is designed to support that reality by combining computer vision, structured data processing, and API-driven inference in a clean production architecture.
+
+From an engineering perspective, this project is valuable because it exercises several real-world system design concerns at once:
+
+- High-impact domain problem with direct operational value
+- Model-backed backend services that must be maintainable and testable
+- Separation of inference, configuration, and API concerns
+- Containerized delivery for reproducible development and deployment
+- A structure that can evolve from local experimentation to production workflows
 
 ## Overview
 
@@ -104,17 +120,74 @@ Separating web routing from model logic improves testability and maintainability
 - Modular code that is easy to mock and extend
 - Container-based runtime parity between development and production
 
-## Local Development
+## API Examples
 
-1. Create a virtual environment.
-2. Install dependencies from `requirements.txt`.
-3. Run the API with Uvicorn.
+### Root
 
-Example:
+```http
+GET /
+```
+
+Response:
+
+```json
+{
+  "message": "AgriGuard API is running",
+  "docs": "/docs",
+  "health": "/health"
+}
+```
+
+### Health
+
+```http
+GET /health
+```
+
+Response:
+
+```json
+{
+  "status": "ok",
+  "service": "ready"
+}
+```
+
+## Getting Started
+
+### 1. Create and activate a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it:
+
+```bash
+.venv\Scripts\activate
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Start the API locally
 
 ```bash
 uvicorn app.main:app --reload
 ```
+
+### 4. Open the service
+
+- API root: `http://127.0.0.1:8000/`
+- Interactive docs: `http://127.0.0.1:8000/docs`
+- Alternative OpenAPI spec: `http://127.0.0.1:8000/redoc`
+
+## Project Status
+
+AgriGuard is currently structured as a production-ready scaffold with a working FastAPI foundation, a test harness, and container support. The repository is ready for iterative expansion into model serving, data persistence, and agronomic analytics.
 
 ## Testing
 
@@ -126,17 +199,30 @@ pytest
 
 ## Docker
 
-Build the image:
+AgriGuard ships with a Python 3.10 optimized Dockerfile for repeatable builds and production-aligned runtime behavior.
+
+### 1. Build the image
 
 ```bash
 docker build -t agriguard .
 ```
 
-Run the container:
+### 2. Run the container
 
 ```bash
 docker run --rm -p 8000:8000 agriguard
 ```
+
+### 3. Verify the deployment
+
+- Health endpoint: `http://127.0.0.1:8000/health`
+- Docs: `http://127.0.0.1:8000/docs`
+
+### 4. Production considerations
+
+- Mount persistent volumes for model artifacts and generated outputs
+- Pass environment variables for runtime configuration
+- Add orchestration, secrets management, and observability before production rollout
 
 ## Future Roadmap
 
@@ -152,6 +238,13 @@ docker run --rm -p 8000:8000 agriguard
 ## Contributing
 
 This repository is structured to support collaborative development. Keep changes modular, documented, and test-backed. Prefer small, reviewable pull requests with clear scope.
+
+## Deployment Notes
+
+- Keep model weights out of the application image when they are expected to change independently
+- Promote trained artifacts through a model registry or versioned storage layer
+- Add CI/CD validation before any production deployment
+- Extend the API with authentication, request throttling, and structured logging as the platform matures
 
 ## License
 
