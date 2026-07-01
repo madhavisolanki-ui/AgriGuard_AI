@@ -1,11 +1,12 @@
 """HTTP route definitions for AgriGuard."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from app.schemas.health import HealthResponse
 from app.schemas.predict_schema import PredictionRequest, PredictionResponse
+from app.schemas.system import RootResponse
+from app.core.config import settings
 from app.services.inference_service import (
-    InferenceError,
     InferenceService,
     get_inference_service,
 )
@@ -13,6 +14,17 @@ from app.services.predictor import get_service_status
 
 
 router = APIRouter()
+
+
+@router.get("/", response_model=RootResponse, tags=["Root"])
+def root() -> RootResponse:
+    """Return a concise application landing payload."""
+    return RootResponse(
+        version=settings.app_version,
+        docs="/docs",
+        health="/health",
+        predict="/predict",
+    )
 
 
 @router.get("/health", response_model=HealthResponse, tags=["Health"])
@@ -32,7 +44,8 @@ def predict(
     service: InferenceService = Depends(get_inference_service),
 ) -> PredictionResponse:
     """Run image inference and return the model prediction."""
-    try:
-        return service.predict(request.image_base64)
-    except InferenceError as exc:
-        raise HTTPException(status_code=exc.status_code, detail=exc.message) from exc
+    return service.predict(
+        request.image_base64,
+        filename=request.filename,
+        content_type=request.content_type,
+    )

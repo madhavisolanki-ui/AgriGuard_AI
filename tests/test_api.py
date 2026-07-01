@@ -34,7 +34,9 @@ def test_root_endpoint(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json() == {
-        "message": "AgriGuard API is running",
+        "status": "ok",
+        "service": "AgriGuard",
+        "version": "0.1.0",
         "docs": "/docs",
         "health": "/health",
         "predict": "/predict",
@@ -69,4 +71,8 @@ def test_predict_endpoint_uses_mocked_inference_service(client: TestClient) -> N
 
     assert response.status_code == 200
     assert response.json() == expected_response
-    fake_service.predict.assert_called_once_with(payload["image_base64"])
+    fake_service.predict.assert_called_once_with(
+        payload["image_base64"],
+        filename=payload["filename"],
+        content_type=payload["content_type"],
+    )
