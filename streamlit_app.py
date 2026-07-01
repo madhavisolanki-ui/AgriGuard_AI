@@ -51,6 +51,9 @@ def _render_probability_bar(label: str, score: float, is_top: bool) -> None:
 
 
 def main() -> None:
+    if "prediction_result" not in st.session_state:
+        st.session_state["prediction_result"] = None
+    
     """Render the Streamlit application."""
     st.set_page_config(page_title="AgriGuard", page_icon="AG", layout="wide")
 
@@ -108,7 +111,7 @@ def main() -> None:
             st.image(
                 uploaded_file,
                 caption=uploaded_file.name,
-                use_container_width=True,
+                use_container_width=True, # You can keep this as True for now 
             )
             st.caption(f"Detected file type: {uploaded_file.type or 'image/jpeg'}")
 

@@ -1,6 +1,7 @@
 """Inference service for AgriGuard."""
 
 from __future__ import annotations
+from torchvision import transforms
 
 import base64
 import io
