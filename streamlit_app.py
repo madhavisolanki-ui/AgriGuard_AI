@@ -44,7 +44,7 @@ def submit_prediction(
 
 def main() -> None:
     """Render the Streamlit application."""
-    st.set_page_config(page_title="AgriGuard", page_icon="AG", layout="centered")
+    st.set_page_config(page_title="AgriGuard", page_icon="🌾", layout="centered")
 
     st.title("AgriGuard")
     st.write("Upload a crop image to get a prediction from the FastAPI backend.")
