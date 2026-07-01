@@ -1,12 +1,12 @@
 """Prediction service abstraction for AgriGuard."""
 
+from app.services.inference_service import get_inference_service
+
 
 def get_service_status() -> str:
-    """Return the current inference service status.
-
-    This stub is intentionally simple for the initial scaffold and can later
-    be expanded to validate model loading, GPU availability, and downstream
-    dependencies.
-    """
-
+    """Return the current inference service status."""
+    try:
+        get_inference_service()
+    except Exception:
+        return "unavailable"
     return "ready"

@@ -22,3 +22,13 @@ def create_app() -> FastAPI:
 
 app = create_app()
 
+
+@app.get("/", tags=["Root"])
+def root() -> dict[str, str]:
+    """Return a simple landing response for the API."""
+    return {
+        "message": "AgriGuard API is running",
+        "docs": "/docs",
+        "health": "/health",
+        "predict": "/predict",
+    }
