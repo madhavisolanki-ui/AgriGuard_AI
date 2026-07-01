@@ -7,12 +7,14 @@ import binascii
 import logging
 import time
 from functools import lru_cache
+from pathlib import Path
 from typing import Final
 
 import torch
 from torch import Tensor, nn
 from torchvision.io import ImageReadMode, decode_image
 
+from app.core.config import settings
 from app.schemas.predict_schema import PredictionResponse
 
 
@@ -71,6 +73,18 @@ class InferenceService:
         """Load the placeholder PyTorch model."""
         try:
             model = DummyAgricultureModel()
+            model_path: Path = settings.model_path
+            if model_path.exists():
+                checkpoint = torch.load(model_path, map_location="cpu")
+                if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
+                    model.load_state_dict(checkpoint["state_dict"])
+                elif isinstance(checkpoint, dict):
+                    model.load_state_dict(checkpoint)
+                else:
+                    LOGGER.warning(
+                        "Model checkpoint at '%s' was not a state dictionary.",
+                        model_path,
+                    )
             model.eval()
             return model
         except Exception as exc:  # pragma: no cover - defensive guard
@@ -148,4 +162,3 @@ class InferenceService:
 def get_inference_service() -> InferenceService:
     """Return a cached inference service instance."""
     return InferenceService()
-

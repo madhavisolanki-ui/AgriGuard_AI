@@ -11,6 +11,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         version=settings.app_version,
+        debug=settings.debug,
         description=(
             "Crop Health and Precision Agriculture API for health checks "
             "and model-backed agronomic workflows."
